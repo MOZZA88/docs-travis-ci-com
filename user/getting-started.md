@@ -21,13 +21,19 @@ Or if you want a more complete guide to a particular language, pick one of these
 3. Add a `.travis.yml` file to your repository to tell Travis CI what to build:
 
    ```yaml
-   language: ruby
-   rvm:
-    - 2.2
-    - jruby
-    - rbx-2
-   # uncomment and edit the following line if your project needs to run something other than `rake`:
-   # script: bundle exec rspec spec
+   language: 
+  script:
+- |
+  git config user.name "<USER_NAME>"
+  git config user.email "<EMAIL>"
+  git remote remove origin
+  git remote add origin https://$GITHUB_API_KEY@github.com/USER_NAME/wiki-sync-example-wiki.git > /dev/null 2>&1
+  git remote add upstream https://$GITHUB_API_KEY@github.com/USER_NAME/wiki-sync-example.wiki.git > /dev/null 2>&1
+  git fetch origin
+  git fetch upstream
+  git merge upstream/master --no-edit
+  git push origin HEAD:master > /dev/null 2>&1
+  git push upstream HEAD:master > /dev/null 2>&1
    ```
 
    This example tells Travis CI that this is a project written in Ruby and built with `rake`. Travis CI tests this project against Ruby 2.2 and the latest versions of JRuby and Rubinius.
